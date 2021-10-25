@@ -18,14 +18,14 @@ day = (datetime.today() + timedelta(7)).strftime("%Y-%m-%d")
 ### DEBUG ###
 debug = True
 start_hour_list = [15]
-day = datetime(2021, 10, 25).strftime('%Y-%m-%d')
+day = datetime(2021, 10, 26).strftime('%Y-%m-%d')
 ### END DEBUG ###
 
 login_details = (EMAIL, PASSWORD)
 wait_time = (20, 0, 0)
 
 
-def book(driver, venue_url, login_details, venue_ids, day, start_hour_list,
+def book(driver, venue_url, login_details, court_ids, day, start_hour_list,
          wait=None, full_hour_only=False, verbose=0):
     '''
     This function tries to book a slot in the selected venue for the day and
@@ -33,9 +33,9 @@ def book(driver, venue_url, login_details, venue_ids, day, start_hour_list,
     Once a booking is successful, the function exits.
 
     Parameters:
-    -> driver: an instance of selenium webdriver
-    -> venue_url: string, url of the venue main booking page
-    -> login_details: tuple or list, with email in position 0 and password in position 1
+    - driver: an instance of selenium webdriver
+    - venue_url: string, url of the venue main booking page
+    - login_details: tuple or list, with email in position 0 and password in position 1
     -court_ids: dictionary.
             keys: court label (e.g. court_1, court_2)
             value: string, the IDs of each court. These differ from each venue
@@ -63,13 +63,15 @@ def book(driver, venue_url, login_details, venue_ids, day, start_hour_list,
         for start_min in [0, 30]:
             start_time = int(start_hour * 60 + start_min)
             court_id = is_slot_available(
-                driver, start_time, day, venue_ids, full_hour_only, verbose)
+                driver, start_time, day, court_ids, full_hour_only=full_hour_only,
+                verbose=verbose)
             if court_id is None:
                 pass
             else:
-                is_booked = book_slot(driver, start_time, day, court_id, verbose)
-            if is_booked==1:
-                return
+                is_booked = book_slot(driver, start_time, day, court_id,
+                            verbose=verbose)
+                if is_booked == 1:
+                    return
 
 
 try:

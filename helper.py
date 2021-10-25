@@ -74,19 +74,30 @@ def sign_in(driver, url, email, password, poll_frequency=0.01):
     later on).
     """
     driver.get(url)
-    email_box = driver.find_element_by_name("EmailAddress")
-    email_box.send_keys(email)
-    psd_box = driver.find_element_by_name("Password")
-    psd_box.send_keys(password)
-    signin_btn = driver.find_element_by_id("signin-btn")
-    signin_btn.click()
+    try:
+        _ = driver.find_element_by_id("book-by-date-view")
+    except:
+        email_box = WebDriverWait(driver, WAITING_TIME * 2, poll_frequency).until(
+            EC.element_to_be_clickable((By.NAME, "EmailAddress")))
+        email_box.send_keys(email)
+        psd_box = WebDriverWait(driver, WAITING_TIME * 2, poll_frequency).until(
+            EC.element_to_be_clickable((By.NAME, "Password")))
+        psd_box.send_keys(password)
+        signin_btn = WebDriverWait(driver, WAITING_TIME * 2, poll_frequency).until(
+            EC.element_to_be_clickable((By.ID, "signin-btn")))
+        signin_btn.click()
+    
     # accept cookies
-    query = "a[class='cb-enable']"
-    WebDriverWait(driver, WAITING_TIME * 2, poll_frequency).until(
-        EC.element_to_be_clickable((By.CSS_SELECTOR, query))
-    ).click()
-    # sleep 1 second - otherwise next steps may fail
-    time.sleep(1)
+    try:
+        query = "a[class='cb-enable']"
+        WebDriverWait(driver, WAITING_TIME * 2, poll_frequency).until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, query))
+        ).click()
+    except:
+        pass
+    finally:
+        # sleep 1 second - otherwise next steps may fail
+        time.sleep(1)
 
 
 def get_booking_page(driver, venue_url, day):
