@@ -14,6 +14,10 @@ This file implements some useful routines:
 -> book_slot:
     From a venue booking webpage tries to book a given slot (for a given court
     at a certain time)
+-> book:
+    This is the main function. It tries to book a slot in the selected venue for
+    the day and times(s) specified, by iterating over all courts and over all
+    specified times.
 '''
 
 import time
@@ -323,3 +327,52 @@ def book_slot(
                 print(
                     f"Unsure whether it was able to book slot: {slot}")
             return 2
+
+
+def book(driver, venue_url, login_details, court_ids, day, start_hour_list,
+         wait=None, full_hour_only=False, verbose=0):
+    '''
+    This function tries to book a slot in the selected venue for the day and
+    times(s) specified, by iterating over all courts and over all specified times.
+    Once a booking is successful, the function exits.
+
+    Parameters:
+    - driver: an instance of selenium webdriver
+    - venue_url: string, url of the venue main booking page
+    - login_details: tuple or list, with email in position 0 and password in position 1
+    -court_ids: dictionary.
+            keys: court label (e.g. court_1, court_2)
+            value: string, the IDs of each court. These differ from each venue
+    -day: a string in the format 'YYYY-MM-DD'
+    -start_hour_list: a list with the hours we want to try and book for
+    -wait: either None (then the function will execute immediately) or a
+          tuple/list in the form (hour, minute, second). In this case, the scrip
+          will first login into the booking page and will then stop execution
+          until the time threshold has been passed. Useful to book 1 week in
+          advance as the booking page will open at 20pm (in which case, the value
+          should be (20, 0, 0)).
+    -full_hour_only: boolean, if True it will book a slot only if 1 full hour is
+                    available, if False it will also book any 30mins slot it can
+                    find
+    -verbose: either 0 or 1. If 1, it will print some information on the booking
+            progress.
+    '''
+
+    email, password = login_details
+    sign_in(driver, venue_url, email, password)
+    if wait is not None:
+        wait_until(wait[0], wait[1], wait[2])
+    get_booking_page(driver, venue_url, day)
+    for start_hour in start_hour_list:
+        for start_min in [0, 30]:
+            start_time = int(start_hour * 60 + start_min)
+            court_id = is_slot_available(
+                driver, start_time, day, court_ids, full_hour_only=full_hour_only,
+                verbose=verbose)
+            if court_id is None:
+                pass
+            else:
+                is_booked = book_slot(driver, start_time, day, court_id,
+                            verbose=verbose)
+                if is_booked == 1:
+                    return
