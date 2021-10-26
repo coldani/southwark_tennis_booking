@@ -3,7 +3,7 @@ This program tries to book a tennis court slot in either Southwark Park or Tanne
 Street Park.
 It uses functions defined in helper.py and constants defined in constants.py.
 
-usage: Book a tennis slot [-h] [--date [DATE]] [--wait [WAIT]] [times]
+usage: book_tennis_court.py [-h] [--date [DATE]] [--wait [WAIT]] [times]
 
 positional arguments:
 times:  {8:00,8:30,9:00,9:30,10:00,10:30,11:00,11:30,12:00,12:30,13:00,13:30,14:00,
@@ -32,7 +32,7 @@ from constants import SOUTHWARK_PARK_IDS, TANNER_PARK_IDS, TANNER_URL, \
     SOUTHWARK_URL, EMAIL, PASSWORD
 
 ###### This section defines command line arguments and options ######
-parser = argparse.ArgumentParser("Book a tennis slot")
+parser = argparse.ArgumentParser()
 available_hours = [str(h) for h in range(8, 21)]
 time_options = [hour + ':' + min for hour in available_hours for min in ['00', '30']]
 parser.add_argument('times', nargs='+', choices=time_options,
