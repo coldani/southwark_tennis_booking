@@ -2,7 +2,15 @@
 
 This program tries to book a tennis court slot in either Southwark Park or Tanner Street Park in Southwark, London.
 
-It has one main file, `book_tennis_court.py`, which uses functions from `helper.py` and data from `constants.py`. 
+## Table of Contents
+
+1. [Overview](#overview)
+2. [Usage](#usage)
+3. [Some Examples](#some-examples)
+
+## Overview
+
+The program is made of one main file, `book_tennis_court.py`, which uses functions from `helper.py` and data from `constants.py`. 
 
 `book_tennis_court.py` can be run directly from the command line by invoking the python interpreter. It takes 3 argument:
 * `times` (positional arguments): indicate when (at what time) we want to book the court for
@@ -40,9 +48,9 @@ optional arguments:
                         Defaults to '20:0:0' (8pm)
 ```
 
-### Some examples
+## Some Examples
 
-#### Basic example
+### Basic example
 The booking system opens at 8pm each day for the day falling one week in the future. 
 So, assuming we are on a Saturday (before 8pm!), the following command will make the script to book a slot at 4.00pm for the following Saturday:
 
@@ -50,7 +58,7 @@ So, assuming we are on a Saturday (before 8pm!), the following command will make
 
 This is because the default values for `--date` and `--wait` are `7` (i.e., 7 days in the future) and `20:0:0` (i.e., 8pm) respectively.
 
-#### Second example
+### Second example
 Let's now assume we are on a Friday and would like to play the next day, but all courts have been booked.
 The only thing we can do is to hope that someone cancels their booking and book it ourselves - however free slots usually disappear really soon, so we need to keep checking and checking and checking!
 
