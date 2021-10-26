@@ -90,7 +90,7 @@ def sign_in(driver, url, email, password, poll_frequency=0.01):
         signin_btn = WebDriverWait(driver, WAITING_TIME * 2, poll_frequency).until(
             EC.element_to_be_clickable((By.ID, "signin-btn")))
         signin_btn.click()
-    
+
     # accept cookies
     try:
         query = "a[class='cb-enable']"
@@ -329,7 +329,7 @@ def book_slot(
             return 2
 
 
-def book(driver, venue_url, login_details, court_ids, day, start_hour_list,
+def book(driver, venue_url, login_details, court_ids, day, times,
          wait=None, full_hour_only=False, verbose=0):
     '''
     This function tries to book a slot in the selected venue for the day and
@@ -344,7 +344,8 @@ def book(driver, venue_url, login_details, court_ids, day, start_hour_list,
             keys: court label (e.g. court_1, court_2)
             value: string, the IDs of each court. These differ from each venue
     -day: a string in the format 'YYYY-MM-DD'
-    -start_hour_list: a list with the hours we want to try and book for
+    -times: a list with the times we want to try and book for, expressed as
+            strings ('hour:minute')
     -wait: either None (then the function will execute immediately) or a
           tuple/list in the form (hour, minute, second). In this case, the scrip
           will first login into the booking page and will then stop execution
@@ -363,16 +364,17 @@ def book(driver, venue_url, login_details, court_ids, day, start_hour_list,
     if wait is not None:
         wait_until(wait[0], wait[1], wait[2])
     get_booking_page(driver, venue_url, day)
-    for start_hour in start_hour_list:
-        for start_min in [0, 30]:
-            start_time = int(start_hour * 60 + start_min)
-            court_id = is_slot_available(
-                driver, start_time, day, court_ids, full_hour_only=full_hour_only,
-                verbose=verbose)
-            if court_id is None:
-                pass
-            else:
-                is_booked = book_slot(driver, start_time, day, court_id,
-                            verbose=verbose)
-                if is_booked == 1:
-                    return
+    for t in times:
+        h, m = t.split(':')
+        start_time = int(h) * 60 + int(m)
+        court_id = is_slot_available(
+            driver, start_time, day, court_ids, full_hour_only=full_hour_only,
+            verbose=verbose)
+        if court_id is None:
+            pass
+        else:
+            is_booked = book_slot(driver, start_time, day, court_id,
+                                  verbose=verbose)
+            if is_booked == 1:
+                return
+            get_booking_page(driver, venue_url, day)

@@ -3,7 +3,6 @@ This file contains useful constants
 '''
 import os
 from dotenv import load_dotenv
-load_dotenv()
 
 SOUTHWARK_PARK_IDS = {
     'court1': "ad7d3c7b-9dff-4442-bb18-4761970f11c0",
@@ -25,5 +24,7 @@ ATTR = "data-test-id"
 TANNER_URL = "https://clubspark.lta.org.uk/TannerStPark/Booking/BookByDate"
 SOUTHWARK_URL = "https://clubspark.lta.org.uk/SouthwarkPark/Booking/BookByDate"
 
+# change the below to provide your user email and password
+load_dotenv()
 EMAIL = os.environ.get('EMAIL')
 PASSWORD = os.environ.get('PASSWORD')
