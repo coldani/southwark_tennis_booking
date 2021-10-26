@@ -2,6 +2,9 @@
 
 This program tries to book a tennis court slot in either Southwark Park or Tanner Street Park in Southwark, London.
 
+*Note: Unfortunately, starting from November 1st 2021, tennis courts in Southwark won't be allowed to be booked for free anymore, and will require a card payment at the moment of booking. I haven't updated the script to reflect this, nor I plan to, hence effectively this script is deprecated (it will throw an exception at some point during the booking phase). I have published this repository nonetheless as an example, since it can be adapted for other booking systems with the appropriate modifications.*
+
+
 ## Table of Contents
 
 1. [Overview](#overview)
